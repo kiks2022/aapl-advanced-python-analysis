@@ -28,7 +28,7 @@ Spoiler: it's messier. It's always messier.
 
 Anyone can plot `Close` vs. `Date`. That's not analysis, that's tracing. This project goes further:
 
-- **It cleans before it trusts.** Missing values get time-aware interpolation, not lazy mean-fills. Duplicate rows get evicted, not ignored.
+- **It cleans before it trusts.** Missing values get forward/backward-filled, not dropped. Duplicate rows get evicted, not ignored.
 - **It quantifies risk, not just price.** A 30-day rolling volatility feature reveals that AAPL doesn't drift calmly upward — it clusters into nervous stretches and quiet stretches, like most equities do.
 - **It lets the moving averages argue with each other.** The 7-day MA reacts like caffeine. The 30-day MA responds like patience. Where they cross is where the story usually turns.
 - **It doesn't average away the outliers.** A +15% day and a −9% day are two of the most important rows in this dataset — and they get treated that way, not diluted into a mean.
@@ -41,16 +41,16 @@ Anyone can plot `Close` vs. `Date`. That's not analysis, that's tracing. This pr
 Raw OHLCV data (yfinance)
         │
         ▼
-🧹 Clean          → datetime parsing · duplicate removal · interpolation
+🧹 Clean          → datetime parsing · duplicate removal · forward/backward-fill
         │
         ▼
-🔧 Transform       → daily change · % change · range % · groupby/resample aggregation
+🔧 Transform       → daily change · % change · high-low spread · groupby/resample aggregation
         │
         ▼
 ⏱️ Time-Series     → 7/30-day rolling MAs · monthly resampling · cumulative return
         │
         ▼
-🧬 Feature Engineer → 30-day annualized volatility · daily % change · high-low spread
+🧬 Feature Engineer → 30-day rolling volatility · daily % change · high-low spread
         │
         ▼
 📊 Visualize        → 7 charts telling 7 different parts of the story
@@ -79,14 +79,16 @@ Raw OHLCV data (yfinance)
 ## 🧩 Repo Structure
 
 ```
-├── Advanced_Python_Analysis_AAPL.ipynb   # the full notebook — run top to bottom
-├── AAPL.csv                              # raw 5-year OHLCV data
-├── AAPL_Engineered.csv                   # cleaned + feature-engineered dataset
-├── AAPL_Engineered.xlsx                  # same engineered dataset, Excel format
-├── High_Closing_Prices.csv               # days where Close > $150
-├── Monthly_Average_Closing_Price.csv     # average Close grouped by year/month
-├── Monthly_Returns.csv                   # month-end % return series
-├── Summary_Statistics.csv                # headline metrics (max/min/avg price, volume, returns)
+├── notebook/
+│   └── Advanced_Python_Analysis_AAPL.ipynb   # the full notebook — run top to bottom
+├── data/
+│   ├── AAPL.csv                              # raw 5-year OHLCV data
+│   ├── AAPL_Engineered.csv                   # cleaned + feature-engineered dataset
+│   ├── AAPL_Engineered.xlsx                  # same engineered dataset, Excel format
+│   ├── High_Closing_Prices.csv               # days where Close > $150
+│   ├── Monthly_Average_Closing_Price.csv     # average Close grouped by year/month
+│   ├── Monthly_Returns.csv                   # month-end % return series
+│   └── Summary_Statistics.csv                # headline metrics (max/min/avg price, volume, returns)
 ├── Images/
 │   ├── Closing_Price_Trend.png
 │   ├── Trading_Volume_Trend.png
@@ -95,11 +97,11 @@ Raw OHLCV data (yfinance)
 │   ├── Average_Monthly_Closing_Price.png
 │   ├── Rolling_Volatility.png
 │   └── Daily_Returns_Distribution.png
+├── report/
+│   └── AAPL_Insight_Summary.pdf              # 2-page written findings & recommendations
 ├── LICENSE
 └── README.md
 ```
-
-> **Note:** the notebook is the official deliverable. If `Advanced_Python_Analysis_AAPL.py` is still present in the repo, it's a plain-script reference version of the same analysis — not required, and can be removed to keep the repo focused on the notebook.
 
 ---
 
@@ -109,7 +111,7 @@ Raw OHLCV data (yfinance)
 git clone https://github.com/kiks2022/aapl-advanced-python-analysis.git
 cd aapl-advanced-python-analysis
 pip install pandas numpy matplotlib yfinance openpyxl
-jupyter notebook Advanced_Python_Analysis_AAPL.ipynb
+jupyter notebook notebook/Advanced_Python_Analysis_AAPL.ipynb
 ```
 
 Or open it straight in Colab and hit **Run All** — the notebook re-pulls fresh AAPL data via `yfinance` on execution, so your numbers will drift slightly from the ones above as new trading days roll in. That's not a bug. That's the market still talking.
