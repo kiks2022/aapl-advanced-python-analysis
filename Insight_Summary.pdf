@@ -1,0 +1,48 @@
+# AAPL Historical Stock Analysis
+*Insight Summary — Week 6 Advanced Python Analysis | AnalystLab Africa Internship, Batch B*
+
+## 1. Dataset Overview
+The analysis uses Apple Inc. (AAPL) daily OHLCV (Open, High, Low, Close, Adjusted Close, Volume) data spanning 5 years, from July 12, 2021 to July 9, 2026, pulled live via the yfinance API. The raw file required cleaning: datetime parsing, chronological sorting, duplicate-date removal, and forward/backward-fill for any missing values.
+
+| Metric | Value |
+|---|---|
+| Trading Days | 1,254 |
+| Total Return | +118.8% |
+| Avg. Daily Volume | 65.1M shares |
+| Price Range | $125.02 – $316.22 |
+| Positive Months | 56.7% (34/60) |
+| Best / Worst Day | +15.33% / -9.25% |
+
+## 2. Data Transformation Techniques Applied
+- Cleaning: datetime parsing, chronological sort, duplicate-date removal, and forward/backward-fill for missing OHLCV values.
+- Calculated columns: Daily Price Change (Close − Open), Daily % Change, and High-Low Spread for every trading day.
+- Filtering: isolated all days where Close exceeded $150.
+- Grouping & aggregation: grouped Close by Year and Month to compute the monthly average closing price series.
+- Resampling: month-end resampling of Close to compute month-over-month percentage returns.
+
+## 3. Trends Identified
+- The 7-day and 30-day moving averages show the stock moving through distinct multi-quarter regimes — a 2022 slide, a 2023-24 climb, a sharp 2025 air-pocket, and a 2026 push toward new highs.
+- Rolling 30-day volatility is not constant: calm plateaus are interrupted by sharp spikes.
+- Trading volume tends to spike alongside the sharpest price moves.
+- Monthly returns are positive in 34 of the last 60 months (56.7%), but down months are comparable in size to the best up months.
+
+## 4. Features Created
+- Daily Price Change and Daily % Change
+- High-Low Spread
+- 7-Day and 30-Day Moving Averages
+- 30-Day Rolling Volatility
+- Monthly Average Closing Price and Monthly Returns
+
+## 5. Key Insights
+- Apple's total return over the period (+118.8%) looks like a smooth growth story only from a distance — the underlying data reveals a volatility story with a growth trend layered on top.
+- A given trading day closes higher only about 53% of the time.
+- The single best day (+15.33%) and single worst day (-9.25%) are outsized relative to typical daily moves.
+- Risk is not static: position-sizing that ignores rolling volatility would be poorly calibrated.
+
+## 6. Recommendations
+- Pair moving-average crossover signals with the rolling volatility feature for dynamic position sizing.
+- Investigate the largest single-day/month outliers against known events (earnings, macro announcements).
+- Backtest a moving-average crossover strategy against buy-and-hold.
+- Extend the pipeline to a peer stock or sector ETF for relative-strength comparison.
+
+*Note: figures above are computed by the accompanying notebook (Advanced_Python_Analysis_AAPL.ipynb) using data pulled live via yfinance.*
